@@ -252,7 +252,7 @@ body.fixed {
 }
 
 #wrapper {
-    padding: 20px;
+    padding: 20px 20px 0;
     background-color: #FFFFFF
 }
 
@@ -288,8 +288,9 @@ body.fixed {
 }
 
 #footer ul {
-    float: left;
-    margin: 1.5em 0
+    display: table;
+    margin: 1em auto;
+    text-align: center;
 }
 
 #footer ul li {
