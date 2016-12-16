@@ -25,6 +25,7 @@
     <div class="container">
             <a target="_blank" href="http://phplist.com">&copy; phpList ltd.</a> - v<?php echo VERSION?>
         <div class="right">
+            <a target="_blank" href="./?page=community">Help</a>&nbsp;  | 
             <a target="_blank" href="http://resources.phplist.com">Resources</a>&nbsp; |  
             <a target="_blank" href="http://www.twitter.com/phplist"><img src="ui/default/images/twitter.png" alt="phpList twitter" /></a>
         </div>
