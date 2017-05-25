@@ -66,16 +66,20 @@ while ($p = Sql_Fetch_Array($req)) {
                 , $p['id']
                 , $checked
             )
-            , ''
-            , 'center'
         );
     } else {
         $adminname = '';
         $isdefault = '';
     }
-    $ls->addColumn($p['id'], s('active'),
-        sprintf('<input type="checkbox" name="active[%d]" value="1" %s  onchange="document.pagelist.submit()" />',
-            $p['id'], $p['active'] ? 'checked="checked"' : ''));
+    $ls->addColumn(
+        $p['id']
+        , s('active')
+        , sprintf(
+            '<input type="checkbox" name="active[%d]" value="1" %s  onchange="document.pagelist.submit()" />'
+            , $p['id']
+            , $p['active'] ? 'checked="checked"' : ''
+        )
+    );
     $ls->addRow($p['id'],
         $p['active'] ? '<span class="yes" title="'.$GLOBALS['I18N']->get('active').'"></span>' : '<span class="no" title="'.$GLOBALS['I18N']->get('not active').'"></span>',
         sprintf('<span class="edit"><a class="button" href="%s&amp;id=%d" title="'.$GLOBALS['I18N']->get('edit').'">%s</a></span>',
