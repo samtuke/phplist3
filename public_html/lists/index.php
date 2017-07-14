@@ -5,20 +5,21 @@ ob_start();
 require_once dirname(__FILE__).'/admin/inc/unregister_globals.php';
 require_once dirname(__FILE__).'/admin/inc/magic_quotes.php';
 
-//# none of our parameters can contain html for now
+// None of our parameters can contain html for now
 $_GET = removeXss($_GET);
 $_POST = removeXss($_POST);
 $_REQUEST = removeXss($_REQUEST);
 $_SERVER = removeXss($_SERVER);
 $_COOKIE = removeXss($_COOKIE);
 
-//# remove a trailing punctuation mark on the uid
+// Remove a trailing punctuation mark on the uid
 if (isset($_GET['uid'])) {
     if (preg_match('/[\.,:;]$/', $_GET['uid'])) {
         $_GET['uid'] = preg_replace('/[\.,:;]$/', '', $_GET['uid']);
     }
 }
 
+// Identify and load a phpList config file
 if (isset($_SERVER['ConfigFile']) && is_file($_SERVER['ConfigFile'])) {
     include $_SERVER['ConfigFile'];
 } elseif (is_file('config/config.php')) {
@@ -28,6 +29,7 @@ if (isset($_SERVER['ConfigFile']) && is_file($_SERVER['ConfigFile'])) {
     exit;
 }
 
+// Initialise default values for versions, languages, etc.
 require_once dirname(__FILE__).'/admin/init.php';
 
 $GLOBALS['database_module'] = basename($GLOBALS['database_module']);
@@ -35,16 +37,18 @@ $GLOBALS['language_module'] = basename($GLOBALS['language_module']);
 
 require_once dirname(__FILE__).'/admin/'.$GLOBALS['database_module'];
 
-// load default english and language
+// Load default english and language
 include_once dirname(__FILE__).'/admin/defaultFrontendTexts.php';
 if (is_file(dirname(__FILE__).'/texts/'.$GLOBALS['language_module'])) {
     include_once dirname(__FILE__).'/texts/'.$GLOBALS['language_module'];
 }
+
 // Allow customisation per installation
 if (is_file($_SERVER['DOCUMENT_ROOT'].'/'.$GLOBALS['language_module'])) {
     include_once $_SERVER['DOCUMENT_ROOT'].'/'.$GLOBALS['language_module'];
 }
 
+// Load bootstrap classes
 require_once dirname(__FILE__).'/admin/inc/random_compat/random.php';
 require_once dirname(__FILE__).'/admin/inc/UUID.php';
 include_once dirname(__FILE__).'/admin/languages.php';
@@ -64,20 +68,16 @@ if (!isset($_POST) && isset($HTTP_POST_VARS)) {
     require 'admin/commonlib/lib/oldphp_vars.php';
 }
 
+// Set page ID
 if (isset($_GET['id'])) {
     $id = sprintf('%d', $_GET['id']);
 } else {
     $id = 0;
 }
 
-// What is id - id of subscribe page
-// What is uid - uid of subscriber
-// What is userid - userid of subscriber
+$userid = $userpassword = $emailcheck = '';
 
-$userid = '';
-$userpassword = '';
-$emailcheck = '';
-
+// If subscriber ID is provided fetch necessary data
 if (isset($_GET['uid']) && $_GET['uid']) {
     $req = Sql_Fetch_Row_Query(sprintf('select subscribepage,id,password,email from %s where uniqid = "%s"',
         $tables['user'], $_GET['uid']));
@@ -117,7 +117,8 @@ if (isset($_GET['uid']) && $_GET['uid']) {
 if (isset($_REQUEST['id']) && $_REQUEST['id']) {
     $id = sprintf('%d', $_REQUEST['id']);
 }
-// make sure the subscribe page still exists
+
+// Make sure the subscribe page still exists
 $req = Sql_fetch_row_query(sprintf('select id from %s where id = %d', $tables['subscribepage'], $id));
 $id = $req[0];
 $msg = '';
@@ -139,6 +140,7 @@ if (!empty($_POST['sendpersonallocation'])) {
     }
 }
 
+// If the new subscriber page is requested, unset subscriber data
 if (isset($_GET['p']) && $_GET['p'] == 'subscribe') {
     $_SESSION['userloggedin'] = 0;
     $_SESSION['userdata'] = array();
